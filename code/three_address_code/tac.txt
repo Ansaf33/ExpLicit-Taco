@@ -1,0 +1,7 @@
+decl
+int a;
+str hello;
+int i;
+int s;
+enddecl
+begin

@@ -1,0 +1,19 @@
+decl
+int a,b,c,d;
+str hello;
+int i;
+int s;
+enddecl
+
+
+begin
+
+
+b = 3*5+2*9/3;
+write(b);
+write(a+3*4);
+
+
+
+
+end;
