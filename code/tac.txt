@@ -1,19 +1,23 @@
 decl
 int a,b,c,d;
+str hello;
 int i;
 int s;
 enddecl
+
 begin
 b = 5;
 a = 2;
 read(a);
 t1 = b * c;
 t2 = a + t1;
-if ( t2 < 3 ) then
+L0:
+if ( t2 < 3 ) goto L1
+goto L2
+L1:
 t3 = a + 1;
 a = t3;
-else
-t4 = a + 2;
-a = t4;
-endif;
+goto L0
+L2:
+write(a);
 end;

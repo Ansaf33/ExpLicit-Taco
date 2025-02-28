@@ -45,9 +45,15 @@ struct TreeNode* createWhileNode(int op,struct TreeNode* left, struct TreeNode* 
 
 void Inorder(struct TreeNode* root);
 
-void printTac(struct TreeNode* root);
+void boolean_expression_tac(struct TreeNode* root);
 
-char* getValue(struct TreeNode* root);
+void arithmetic_expression_tac(struct TreeNode* root);
+
+void assignment_tac(struct TreeNode* root);
+
+void write_tac(struct TreeNode* root);
+
+void read_tac(struct TreeNode* root);
 
 #endif
 

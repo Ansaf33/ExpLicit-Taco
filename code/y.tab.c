@@ -78,12 +78,13 @@
 #include "evaluator/evaluator.h"
 #include "symbol_table/Gsymbol.h"
 #include "symbol_table/varList.h"
+#include "three_address_code/tacgen.h"
 
 
 struct TreeNode* root;
 
-
 extern FILE* yyin;
+FILE* tacFile;
 
 int yylex(void);
 void yyerror(char* s);
@@ -91,7 +92,7 @@ void yyerror(char* s);
 
 
 
-#line 95 "y.tab.c"
+#line 96 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -214,7 +215,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 25 "parser.y"
+#line 26 "parser.y"
 
   struct TreeNode* node;
   char* string;
@@ -224,7 +225,7 @@ union YYSTYPE
 
 
 
-#line 228 "y.tab.c"
+#line 229 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -693,8 +694,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    52,    52,    55,    60,    64,    66,    70,    77,    81,
-      87,    91,    97,   109,   115,   119,   125,   127,   129,   131,
+       0,    53,    53,    56,    61,    65,    67,    71,    78,    82,
+      88,    92,    98,   109,   115,   119,   125,   127,   129,   131,
      133,   135,   137,   139,   143,   149,   153,   159,   165,   171,
      178,   184,   188,   192,   196,   200,   204,   208,   212,   216,
      220,   224,   228,   230,   234,   239,   243,   250,   256
@@ -1361,57 +1362,57 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* DECLARATIONS: DECL DL ENDDECL  */
-#line 55 "parser.y"
+#line 56 "parser.y"
                             {
                 printf("All declarations parsed.\n");
                 getAll();
               }
-#line 1370 "y.tab.c"
+#line 1371 "y.tab.c"
     break;
 
   case 7: /* D: TYPE VARLIST ';'  */
-#line 70 "parser.y"
+#line 71 "parser.y"
                       {
 
         addAllSymbols((yyvsp[-1].list),(yyvsp[-2].integer),1);
      }
-#line 1379 "y.tab.c"
+#line 1380 "y.tab.c"
     break;
 
   case 8: /* TYPE: INT  */
-#line 77 "parser.y"
+#line 78 "parser.y"
          {
      (yyval.integer) = (yyvsp[0].integer);
      }
-#line 1387 "y.tab.c"
+#line 1388 "y.tab.c"
     break;
 
   case 9: /* TYPE: STR  */
-#line 81 "parser.y"
+#line 82 "parser.y"
          {
      (yyval.integer) = (yyvsp[0].integer);
      }
-#line 1395 "y.tab.c"
+#line 1396 "y.tab.c"
     break;
 
   case 10: /* VARLIST: VARLIST ',' ID  */
-#line 87 "parser.y"
+#line 88 "parser.y"
                        {
           (yyval.list) = addVariable((yyvsp[-2].list),(yyvsp[0].string));
         }
-#line 1403 "y.tab.c"
+#line 1404 "y.tab.c"
     break;
 
   case 11: /* VARLIST: ID  */
-#line 91 "parser.y"
+#line 92 "parser.y"
            {
           (yyval.list) = addVariable(NULL,(yyvsp[0].string));
         }
-#line 1411 "y.tab.c"
+#line 1412 "y.tab.c"
     break;
 
   case 12: /* P: BEG SL END ';'  */
-#line 97 "parser.y"
+#line 98 "parser.y"
                  {
     
     root = (yyvsp[-2].node);
@@ -1420,8 +1421,7 @@ yyreduce:
     printf("Valid Program.\n");
     printf("Inorder traversal : \n");
     Inorder((yyvsp[-2].node));
-    printf("\nThree address code : \n");
-    printTac((yyvsp[-2].node));
+
   }
 #line 1427 "y.tab.c"
     break;
@@ -1853,7 +1853,18 @@ int main(int argc, char* argv[]){
 // --------------------------------- PARSING INPUT 
   FILE* f = fopen(argv[1],"r");
   yyin = f;
+
+  tacFile = fopen("tac.txt","w"); // three address code file
+  FILE* inputFile = fopen("input.txt","r");
+  copyDeclarations(inputFile,tacFile); // copy everything from decl to enddecl to the tacFile
+
   yyparse();
+
+  getTac(tacFile,root); // create three address code for the root
+  fprintf(tacFile,"end;\n");
+
+ 
+
 
 
 
@@ -1866,7 +1877,6 @@ int main(int argc, char* argv[]){
   //fprintf(xsm,"BRKP\n");
   codeGen(xsm,root,-1,-1);
   fprintf(xsm,"INT 10\n");
-
 
 
 // --------------------------------- EXERCISE 1

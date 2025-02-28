@@ -8,12 +8,13 @@
 #include "evaluator/evaluator.h"
 #include "symbol_table/Gsymbol.h"
 #include "symbol_table/varList.h"
+#include "three_address_code/tacgen.h"
 
 
 struct TreeNode* root;
 
-
 extern FILE* yyin;
+FILE* tacFile;
 
 int yylex(void);
 void yyerror(char* s);
@@ -102,8 +103,7 @@ P :
     printf("Valid Program.\n");
     printf("Inorder traversal : \n");
     Inorder($2);
-    printf("\nThree address code : \n");
-    printTac($2);
+
   }
   |
   BEG END ';' {
@@ -277,7 +277,18 @@ int main(int argc, char* argv[]){
 // --------------------------------- PARSING INPUT 
   FILE* f = fopen(argv[1],"r");
   yyin = f;
+
+  tacFile = fopen("tac.txt","w"); // three address code file
+  FILE* inputFile = fopen("input.txt","r");
+  copyDeclarations(inputFile,tacFile); // copy everything from decl to enddecl to the tacFile
+
   yyparse();
+
+  getTac(tacFile,root); // create three address code for the root
+  fprintf(tacFile,"end;\n");
+
+ 
+
 
 
 
@@ -290,7 +301,6 @@ int main(int argc, char* argv[]){
   //fprintf(xsm,"BRKP\n");
   codeGen(xsm,root,-1,-1);
   fprintf(xsm,"INT 10\n");
-
 
 
 // --------------------------------- EXERCISE 1

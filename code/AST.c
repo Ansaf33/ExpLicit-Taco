@@ -6,7 +6,7 @@
 #include "AST.h"
 #include "operators/optrans.h"
 #include "symbol_table/Gsymbol.h"
-
+#include "three_address_code/tacgen.h"
 
 
 int varId = 1;
@@ -118,44 +118,35 @@ struct TreeNode* createOpNode(int type,int op,struct TreeNode* left,struct TreeN
     }
   }
 
-  // three address code for arithmetic and boolean operators
-  if( op <= 10 && op != 4 ){
-    char* varid = (char*)malloc(sizeof(char)*10);
-    int id = getVariableId();
-    sprintf(varid,"t%d",id);
-    temp->varid = varid;
-    
-    temp->code = (char*)malloc(sizeof(char)*256);
-
-
-    // convert the numbers to string for compatibility
-    char leftnum[10];
-    char rightnum[10];
-    sprintf(leftnum,"%d",temp->left->val);
-    sprintf(rightnum,"%d",temp->right->val);
-    
-
-    sprintf(  
-            temp->code,
-            "%s = %s %s %s\n",
-            temp->varid,
-            temp->left->varid ? temp->left->varid : temp->left->varname ? temp->left->varname : leftnum,
-            map(op),
-            temp->right->varid ? temp->right->varid : temp->right->varname ? temp->right->varname : rightnum
-            );
+  switch(op){
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      arithmetic_expression_tac(temp);
+      break;
+      case 4:
+      assignment_tac(temp);
+      break;
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10: 
+      boolean_expression_tac(temp);
+      break;
+    case 11:
+      read_tac(temp);
+      break;
+    case 12:
+      write_tac(temp);
+      break;
+      
   }
 
-  // three address code for assignment operator
-  if( op == 4 ){
-    temp->code = (char*)malloc(sizeof(char)*256);
-    sprintf(
-      temp->code,
-      "%s = %s\n",
-      temp->left->varname,
-      temp->right->varid ? temp->right->varid : temp->right->varname
-    );
 
-  }
+
 
   
   return temp;
@@ -236,6 +227,9 @@ struct TreeNode* createIfNode(struct TreeNode* middle,struct TreeNode* left,stru
   }
 
 
+
+
+
   
 
   return temp;
@@ -298,28 +292,75 @@ void Inorder(struct TreeNode* root){
   Inorder(root->right);
 }
 
-// --------------------------- THREE ADDRESS CODE GEN
+// --------------------------------------------------------------------------------------- CODE FOR ARITHMETIC EXPRESSIONS
 
-void printTac(struct TreeNode* root){
-  if( root == NULL ){
-    return;
-  }
-  printTac(root->left);
-  printTac(root->right);
+void arithmetic_expression_tac(struct TreeNode* temp){
 
-  if( root->op <= 10 && root->code ){
-    printf("%s",root->code);
-  }
+  char* varid = (char*)malloc(sizeof(char)*10);
+  int id = getVariableId();
+  sprintf(varid,"t%d",id);
+  temp->varid = varid;
+      
+  temp->code = (char*)malloc(sizeof(char)*256);
+  sprintf(  
+    temp->code,
+    "%s = %s %s %s;\n",
+    getValue(temp),
+    getValue(temp->left),
+    map(temp->op),
+    getValue(temp->right)
+  ); 
 
-  if( root->op == 12 ){
-    printf("write(%s)\n",getValue(root->left));
-  }
-
- }
-
-
-char* getValue(struct TreeNode* root){
-  char num[10];
-  sprintf(num,"%d",root->val);
-  return root->varid?root->varid:root->varname?root->varname:num;
 }
+
+// --------------------------------------------------------------------------------------- CODE FOR ASSIGNMENTS
+
+void assignment_tac(struct TreeNode* temp){
+  temp->code = (char*)malloc(sizeof(char)*256);
+  sprintf(
+    temp->code,
+    "%s = %s;\n",
+    getValue(temp->left),
+    getValue(temp->right)
+  );  
+}
+
+// --------------------------------------------------------------------------------------- CODE FOR WRITE STATEMENT
+
+
+void write_tac(struct TreeNode* temp){
+      temp->code = (char*)malloc(sizeof(char)*256);
+      sprintf(
+        temp->code,
+        "write(%s);\n",
+        getValue(temp->left)
+      );
+}
+
+// --------------------------------------------------------------------------------------- CODE FOR BOOLEAN EXPRESSIONS
+
+
+void boolean_expression_tac(struct TreeNode* temp){
+      temp->code = (char*)malloc(sizeof(char)*256);
+       sprintf(
+        temp->code,
+        "%s %s %s",
+        getValue(temp->left),
+        map(temp->op),
+        getValue(temp->right)
+      );
+}
+
+// --------------------------------------------------------------------------------------- CODE FOR READ STATEMENT
+
+void read_tac(struct TreeNode* temp){
+  temp->code = (char*)malloc(sizeof(char)*256);
+  sprintf(
+    temp->code,
+    "read(%s);\n",
+    getValue(temp->left)
+  );
+}
+
+// -------------------------------------------------------------------------------------- CODE FOR WHILE STATEMENT
+
