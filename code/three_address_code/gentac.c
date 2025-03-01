@@ -137,9 +137,8 @@ void if_print_tac(FILE* f,struct TreeNode* root){
     getTac(f,root->left);
     fprintf(f,"goto L%d\n",endB);
 
-
+    fprintf(f,"L%d:\n",elseB);
     if( root->right ){
-      fprintf(f,"L%d:\n",elseB);
       getTac(f,root->right);
     }
 
