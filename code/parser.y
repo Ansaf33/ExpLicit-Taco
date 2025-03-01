@@ -8,7 +8,7 @@
 #include "evaluator/evaluator.h"
 #include "symbol_table/Gsymbol.h"
 #include "symbol_table/varList.h"
-#include "three_address_code/tacgen.h"
+#include "three_address_code/gentac.h"
 
 
 struct TreeNode* root;
@@ -95,14 +95,16 @@ VARLIST :
         ;
 
 P :
-  BEG SL END ';' {
-    
+  BEG SL END ';' { 
     root = $2;
-    storeTempsInGSymbolTable();
     getAll();
     printf("Valid Program.\n");
     printf("Inorder traversal : \n");
     Inorder($2);
+
+    // store the used temp numbers in a file
+    FILE* f = fopen("file.txt","w");
+    fprintf(f,"%d\n",getUsedTemps());
 
   }
   |
@@ -278,7 +280,7 @@ int main(int argc, char* argv[]){
   FILE* f = fopen(argv[1],"r");
   yyin = f;
 
-  tacFile = fopen("tac.txt","w"); // three address code file
+  tacFile = fopen("three_address_code/tac.txt","w"); // three address code file
   FILE* inputFile = fopen("input.txt","r");
   copyDeclarations(inputFile,tacFile); // copy everything from decl to enddecl to the tacFile
 
@@ -286,10 +288,6 @@ int main(int argc, char* argv[]){
 
   getTac(tacFile,root); // create three address code for the root
   fprintf(tacFile,"end;\n");
-
- 
-
-
 
 
 // --------------------------------- ASSEMBLY CODE

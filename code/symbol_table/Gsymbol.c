@@ -7,6 +7,7 @@
 struct Gsymbol* head = NULL;
 static int address = 4095;
 
+
 struct Gsymbol* createNode(char* name, int type,int size){
   struct Gsymbol* temp = (struct Gsymbol*)malloc(sizeof(struct Gsymbol));
   temp->name = (char*)malloc(sizeof(char)*100);
@@ -77,10 +78,39 @@ bool checkIfDeclared(char* name){
 
 void getAll(){
   struct Gsymbol* current = head;
+  if( current == NULL ){
+    printf("GST is empty.\n");
+  }
   while( current != NULL ){
     printf("name : %s | type : %d | size : %d | address : %d\n",current->name,current->type,current->size,current->address);
     current = current->next;
   }
+
 }
+
+
+void deleteGSymbolTable(){
+  struct Gsymbol* cur = head;
+  struct Gsymbol* prev = NULL;
+  while(cur){
+    prev = cur;
+    cur = cur->next;
+    free(prev);
+  }
+  head = NULL;
+  address = 4095;
+}
+
+// ------------------------------------------------------------------------------------------------------------- STORE TEMPS IN SYMBOL TABLE
+
+void storeTempsInGSymbolTable(int id){
+  char* v = (char*)malloc(sizeof(char)*3); 
+  for(int i=1;i<=id;i++){
+    sprintf(v,"t%d",i);
+    addGsymbol(v,0,1);
+  }
+  free(v);
+}
+
 
 

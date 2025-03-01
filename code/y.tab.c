@@ -78,7 +78,7 @@
 #include "evaluator/evaluator.h"
 #include "symbol_table/Gsymbol.h"
 #include "symbol_table/varList.h"
-#include "three_address_code/tacgen.h"
+#include "three_address_code/gentac.h"
 
 
 struct TreeNode* root;
@@ -695,10 +695,10 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int16 yyrline[] =
 {
        0,    53,    53,    56,    61,    65,    67,    71,    78,    82,
-      88,    92,    98,   109,   115,   119,   125,   127,   129,   131,
-     133,   135,   137,   139,   143,   149,   153,   159,   165,   171,
-     178,   184,   188,   192,   196,   200,   204,   208,   212,   216,
-     220,   224,   228,   230,   234,   239,   243,   250,   256
+      88,    92,    98,   111,   117,   121,   127,   129,   131,   133,
+     135,   137,   139,   141,   145,   151,   155,   161,   167,   173,
+     180,   186,   190,   194,   198,   202,   206,   210,   214,   218,
+     222,   226,   230,   232,   236,   241,   245,   252,   258
 };
 #endif
 
@@ -1413,237 +1413,239 @@ yyreduce:
 
   case 12: /* P: BEG SL END ';'  */
 #line 98 "parser.y"
-                 {
-    
+                 { 
     root = (yyvsp[-2].node);
-    storeTempsInGSymbolTable();
     getAll();
     printf("Valid Program.\n");
     printf("Inorder traversal : \n");
     Inorder((yyvsp[-2].node));
 
+    // store the used temp numbers in a file
+    FILE* f = fopen("file.txt","w");
+    fprintf(f,"%d\n",getUsedTemps());
+
   }
-#line 1427 "y.tab.c"
+#line 1429 "y.tab.c"
     break;
 
   case 13: /* P: BEG END ';'  */
-#line 109 "parser.y"
+#line 111 "parser.y"
               {
   printf("Valid program.\n");
   }
-#line 1435 "y.tab.c"
+#line 1437 "y.tab.c"
     break;
 
   case 14: /* SL: SL S  */
-#line 115 "parser.y"
+#line 117 "parser.y"
          {
    (yyval.node) = createOpNode(-1,13,(yyvsp[-1].node),(yyvsp[0].node));
   }
-#line 1443 "y.tab.c"
+#line 1445 "y.tab.c"
     break;
 
   case 15: /* SL: S  */
-#line 119 "parser.y"
+#line 121 "parser.y"
       {
     (yyval.node) = (yyvsp[0].node);
   }
-#line 1451 "y.tab.c"
+#line 1453 "y.tab.c"
     break;
 
   case 23: /* S: BREAK ';'  */
-#line 139 "parser.y"
+#line 141 "parser.y"
             {
     (yyval.node) = createOpNode(-1,16,NULL,NULL);
   }
-#line 1459 "y.tab.c"
+#line 1461 "y.tab.c"
     break;
 
   case 24: /* S: CONTINUE ';'  */
-#line 143 "parser.y"
+#line 145 "parser.y"
                {
     (yyval.node) = createOpNode(-1,17,NULL,NULL);
   }
-#line 1467 "y.tab.c"
+#line 1469 "y.tab.c"
     break;
 
   case 25: /* IFST: IF '(' E ')' THEN SL ELSE SL ENDIF  */
-#line 149 "parser.y"
+#line 151 "parser.y"
                                         {
       (yyval.node) = createIfNode((yyvsp[-6].node),(yyvsp[-3].node),(yyvsp[-1].node));
     }
-#line 1475 "y.tab.c"
+#line 1477 "y.tab.c"
     break;
 
   case 26: /* IFST: IF '(' E ')' THEN SL ENDIF  */
-#line 153 "parser.y"
+#line 155 "parser.y"
                                {
       (yyval.node) = createIfNode((yyvsp[-4].node),(yyvsp[-1].node),NULL);
     }
-#line 1483 "y.tab.c"
+#line 1485 "y.tab.c"
     break;
 
   case 27: /* WHILEST: WHILE '(' E ')' DO SL ENDWHILE  */
-#line 159 "parser.y"
+#line 161 "parser.y"
                                        {
         (yyval.node) = createWhileNode(15,(yyvsp[-4].node),(yyvsp[-1].node));
         }
-#line 1491 "y.tab.c"
+#line 1493 "y.tab.c"
     break;
 
   case 28: /* REPEATST: REPEAT SL UNTIL '(' E ')'  */
-#line 165 "parser.y"
+#line 167 "parser.y"
                                    {
          (yyval.node) = createWhileNode(18,(yyvsp[-1].node),(yyvsp[-4].node));
         }
-#line 1499 "y.tab.c"
+#line 1501 "y.tab.c"
     break;
 
   case 29: /* DOWHILEST: DO SL WHILE '(' E ')'  */
-#line 171 "parser.y"
+#line 173 "parser.y"
                                 { 
           (yyval.node) = createWhileNode(19,(yyvsp[-1].node),(yyvsp[-4].node));
           }
-#line 1507 "y.tab.c"
+#line 1509 "y.tab.c"
     break;
 
   case 30: /* ASSG: IDENTIFIER EQUALS E  */
-#line 178 "parser.y"
+#line 180 "parser.y"
                       {
   (yyval.node) = createOpNode(-1,4,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1515 "y.tab.c"
+#line 1517 "y.tab.c"
     break;
 
   case 31: /* E: E PLUS E  */
-#line 184 "parser.y"
+#line 186 "parser.y"
            {
   (yyval.node) = createOpNode(0,0,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1523 "y.tab.c"
+#line 1525 "y.tab.c"
     break;
 
   case 32: /* E: E MINUS E  */
-#line 188 "parser.y"
+#line 190 "parser.y"
             {
   (yyval.node) = createOpNode(0,1,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1531 "y.tab.c"
+#line 1533 "y.tab.c"
     break;
 
   case 33: /* E: E MUL E  */
-#line 192 "parser.y"
+#line 194 "parser.y"
           {
   (yyval.node) = createOpNode(0,2,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1539 "y.tab.c"
+#line 1541 "y.tab.c"
     break;
 
   case 34: /* E: E DIV E  */
-#line 196 "parser.y"
+#line 198 "parser.y"
           {
   (yyval.node) = createOpNode(0,3,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1547 "y.tab.c"
+#line 1549 "y.tab.c"
     break;
 
   case 35: /* E: E LT E  */
-#line 200 "parser.y"
+#line 202 "parser.y"
          {
   (yyval.node) = createOpNode(1,5,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1555 "y.tab.c"
+#line 1557 "y.tab.c"
     break;
 
   case 36: /* E: E LTE E  */
-#line 204 "parser.y"
+#line 206 "parser.y"
           {
   (yyval.node) = createOpNode(1,6,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1563 "y.tab.c"
+#line 1565 "y.tab.c"
     break;
 
   case 37: /* E: E GT E  */
-#line 208 "parser.y"
+#line 210 "parser.y"
          {
   (yyval.node) = createOpNode(1,7,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1571 "y.tab.c"
+#line 1573 "y.tab.c"
     break;
 
   case 38: /* E: E GTE E  */
-#line 212 "parser.y"
+#line 214 "parser.y"
           {
   (yyval.node) = createOpNode(1,8,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1579 "y.tab.c"
+#line 1581 "y.tab.c"
     break;
 
   case 39: /* E: E NEQ E  */
-#line 216 "parser.y"
+#line 218 "parser.y"
           {
   (yyval.node) = createOpNode(1,9,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1587 "y.tab.c"
+#line 1589 "y.tab.c"
     break;
 
   case 40: /* E: E EQ E  */
-#line 220 "parser.y"
+#line 222 "parser.y"
          {
   (yyval.node) = createOpNode(1,10,(yyvsp[-2].node),(yyvsp[0].node));
   }
-#line 1595 "y.tab.c"
+#line 1597 "y.tab.c"
     break;
 
   case 41: /* E: '(' E ')'  */
-#line 224 "parser.y"
+#line 226 "parser.y"
             {
   (yyval.node) = (yyvsp[-1].node);
   }
-#line 1603 "y.tab.c"
+#line 1605 "y.tab.c"
     break;
 
   case 44: /* IDENTIFIER: ID  */
-#line 234 "parser.y"
+#line 236 "parser.y"
               { 
             (yyval.node) = createIdNode((yyvsp[0].string));
           }
-#line 1611 "y.tab.c"
+#line 1613 "y.tab.c"
     break;
 
   case 45: /* CONSTANT: NUM  */
-#line 239 "parser.y"
+#line 241 "parser.y"
              {
           (yyval.node) = createNumNode(atoi((yyvsp[0].string)));
           }
-#line 1619 "y.tab.c"
+#line 1621 "y.tab.c"
     break;
 
   case 46: /* CONSTANT: STRING  */
-#line 243 "parser.y"
+#line 245 "parser.y"
                 {
           (yyval.node) = createStringNode((yyvsp[0].string));
           }
-#line 1627 "y.tab.c"
+#line 1629 "y.tab.c"
     break;
 
   case 47: /* INPUT: READ '(' IDENTIFIER ')'  */
-#line 250 "parser.y"
+#line 252 "parser.y"
                                {
        (yyval.node) = createOpNode(-1,11,(yyvsp[-1].node),NULL);
       }
-#line 1635 "y.tab.c"
+#line 1637 "y.tab.c"
     break;
 
   case 48: /* OUTPUT: WRITE '(' E ')'  */
-#line 256 "parser.y"
+#line 258 "parser.y"
                        {
         (yyval.node) = createOpNode(-1,12,(yyvsp[-1].node),NULL);
       }
-#line 1643 "y.tab.c"
+#line 1645 "y.tab.c"
     break;
 
 
-#line 1647 "y.tab.c"
+#line 1649 "y.tab.c"
 
       default: break;
     }
@@ -1836,7 +1838,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 264 "parser.y"
+#line 266 "parser.y"
 
 
 
@@ -1854,7 +1856,7 @@ int main(int argc, char* argv[]){
   FILE* f = fopen(argv[1],"r");
   yyin = f;
 
-  tacFile = fopen("tac.txt","w"); // three address code file
+  tacFile = fopen("three_address_code/tac.txt","w"); // three address code file
   FILE* inputFile = fopen("input.txt","r");
   copyDeclarations(inputFile,tacFile); // copy everything from decl to enddecl to the tacFile
 
@@ -1862,10 +1864,6 @@ int main(int argc, char* argv[]){
 
   getTac(tacFile,root); // create three address code for the root
   fprintf(tacFile,"end;\n");
-
- 
-
-
 
 
 // --------------------------------- ASSEMBLY CODE

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+
 struct Gsymbol{
   char* name;
   int type;
@@ -36,5 +37,11 @@ bool checkIfDeclared(char* name);
 // PRINTING DETAILS
 
 void getAll(void);
+
+// DELETING GST
+
+void deleteGSymbolTable(void);
+
+void storeTempsInGSymbolTable(int id);
 
 #endif

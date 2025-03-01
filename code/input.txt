@@ -1,23 +1,22 @@
 decl
-int a,b,c,d;
-str hello;
-int i;
-int s;
+int a;
+int n;
+int val;
 enddecl
 
 
 begin
 
+read(n);
 
-b = 5;
-a = 2;
+val = 1;
+a = 1;
 
-read(a);
-
-while ( a+b*c < 3 ) do
-  a = a + 1;
+while(a <= n) do
+  val = val*a;
+  a = a+1;
 endwhile;
 
-write(a);
+write(val);
 
 end;

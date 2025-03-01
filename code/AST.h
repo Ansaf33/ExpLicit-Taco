@@ -27,9 +27,9 @@ struct TreeNode{
 
 bool typeSatisfied(struct TreeNode* root);
 
-void storeTempsInGSymbolTable(void);
-
 int getVariableId(void);
+
+int getUsedTemps();
 
 struct TreeNode* createNumNode(int val);
 

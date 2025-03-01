@@ -230,10 +230,6 @@ void read_codeGen(FILE* f,struct TreeNode* root){
 
   int memAddress = getSymbolAddress(root->left);
 
-  //char s[50];
-  //snprintf(s,sizeof(s),"Enter %s : ", root->left->varname);
-  //getInput(f,s);
-
   // STACK POINTER
   fprintf(f,"MOV SP, %d\n",4500);
 

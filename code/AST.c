@@ -6,7 +6,7 @@
 #include "AST.h"
 #include "operators/optrans.h"
 #include "symbol_table/Gsymbol.h"
-#include "three_address_code/tacgen.h"
+#include "three_address_code/gentac.h"
 
 
 int varId = 1;
@@ -16,16 +16,12 @@ int getVariableId(){
   return varId++;
 }
 
-// ------------------------------------------------------------------------------------------------------------- STORE TEMPS IN SYMBOL TABLE
+// ------------------------------------------------------------------------------------------------------------ NUMBER OF TEMPS ( TO STORE IN GST )
 
-void storeTempsInGSymbolTable(){
-  char* v = (char*)malloc(sizeof(char)*3); 
-  for(int i=1;i<varId;i++){
-    sprintf(v,"t%d",i);
-    addGsymbol(v,0,1);
-  }
-  free(v);
+int getUsedTemps(){
+  return varId-1;
 }
+
 
 // --------------------------------------------------------------------------------------------------------------- CHECK IF TYPE IS SAME
 
@@ -87,6 +83,19 @@ struct TreeNode* createNumNode(int val){
   temp->right = NULL;
   temp->middle = NULL;
   temp->Gsymbol = NULL;
+
+  char* varid = (char*)malloc(sizeof(char)*10);
+  int id = getVariableId();
+  sprintf(varid,"t%d",id);
+  temp->varid = varid;
+      
+  temp->code = (char*)malloc(sizeof(char)*256);
+  sprintf(  
+    temp->code,
+    "%s = %d;\n",
+    getValue(temp),
+    val 
+  ); 
 
 
 
