@@ -20,10 +20,14 @@ struct TreeNode{
   struct TreeNode* right;
 
   struct Gsymbol* Gsymbol;
+  char* content;
   
   char* varid;
   char* code;
+  bool printed;
 };
+
+bool init_hashmap(void);
 
 bool typeSatisfied(struct TreeNode* root);
 

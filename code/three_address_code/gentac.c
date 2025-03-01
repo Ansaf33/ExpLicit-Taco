@@ -4,6 +4,7 @@
 #include "../AST.h"
 #include "gentac.h"
 #include "../operators/optrans.h"
+#include "../map_implementation/map.h"
 
 int blockLabel = 0;
 
@@ -89,6 +90,10 @@ void arithmetic_expression_print_tac(FILE* f,struct TreeNode* root){
   if( root == NULL ){
     return;
   }
+  if( root->printed ){
+    return;
+  }
+  root->printed = true;
   arithmetic_expression_print_tac(f,root->left);
   arithmetic_expression_print_tac(f,root->right);
 

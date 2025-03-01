@@ -9,14 +9,9 @@ begin
 
 read(n);
 
-val = 1;
-a = 1;
+val = 3*5+2*9;
+a = 3*5+2*9;
+write(a);
 
-while(a <= n) do
-  val = val*a;
-  a = a+1;
-endwhile;
-
-write(val);
 
 end;
