@@ -1,19 +1,25 @@
 decl
-int a,b,c,d;
-int i;
-int s;
+int a;
+int n;
+int val;
 enddecl
+
 begin
-b = 5;
-a = 2;
-read(a);
-t1 = b * c;
-t2 = a + t1;
-if ( t2 < 3 ) then
-t3 = a + 1;
-a = t3;
-else
-t4 = a + 2;
-a = t4;
-endif;
+read(n);
+t1 = 1;
+val = t1;
+t2 = 1;
+a = t2;
+L0:
+if ( a <= n ) goto L1
+goto L2
+L1:
+t3 = val * a;
+val = t3;
+t4 = 1;
+t5 = a + t4;
+a = t5;
+goto L0
+L2:
+write(val);
 end;

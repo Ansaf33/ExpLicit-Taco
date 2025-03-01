@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../AST.h"
-#include "tacgen.h"
+#include "gentac.h"
 #include "../operators/optrans.h"
 
 int blockLabel = 0;
