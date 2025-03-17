@@ -902,40 +902,48 @@ case 18:
 YY_RULE_SETUP
 #line 99 "lextac.l"
 {
-  return PLUS;
+  yylval.string = (char*)malloc(sizeof(char)*3);
+  strcpy(yylval.string,"ADD");
+  return ADD;
 }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 103 "lextac.l"
+#line 105 "lextac.l"
 {
+  yylval.string = (char*)malloc(sizeof(char)*3);
+  strcpy(yylval.string,"SUB"); 
   return MINUS;
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 107 "lextac.l"
+#line 111 "lextac.l"
 {
+  yylval.string = (char*)malloc(sizeof(char)*3);
+  strcpy(yylval.string,"MUL");
   return MUL;
 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 111 "lextac.l"
+#line 117 "lextac.l"
 {
+  yylval.string = (char*)malloc(sizeof(char)*3);
+  strcpy(yylval.string,"DIV");
   return DIV;
 }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 115 "lextac.l"
+#line 123 "lextac.l"
 {
   return EQUALS;
 }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 119 "lextac.l"
+#line 127 "lextac.l"
 {
   yylval.string = (char*)malloc(sizeof(char)*100);
   strcpy(yylval.string,yytext);
@@ -944,43 +952,43 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 125 "lextac.l"
+#line 133 "lextac.l"
 ;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 128 "lextac.l"
+#line 136 "lextac.l"
 {
   return '(';
 }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 131 "lextac.l"
+#line 139 "lextac.l"
 {
   return ')';
 }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 134 "lextac.l"
+#line 142 "lextac.l"
 {
   return ';';
 }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 137 "lextac.l"
+#line 145 "lextac.l"
 {
   return yytext[0];
 }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 142 "lextac.l"
+#line 150 "lextac.l"
 ECHO;
 	YY_BREAK
-#line 984 "lex.yy.c"
+#line 992 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1985,7 +1993,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 142 "lextac.l"
+#line 150 "lextac.l"
 
 
 

@@ -7,18 +7,19 @@
 #include "../symbol_table/varList.h"
 #include "gentac.h"
 #include "instruction_set.h"
+#include "map_implementation/map.h"
+#include "set_implementation/set.h"
 
 
+SimpleSet set;
+HashMap* hashmap = NULL;
 struct TreeNode* root;
-
-
 extern FILE* yyin;
 FILE* f;
 FILE* xsm;
 
 int yylex(void);
 void yyerror(char* s);
-
 
 
 %}
@@ -30,7 +31,7 @@ void yyerror(char* s);
   struct list* list;
 }
 
-%type<string>RELOP
+%type<string>RELOP ARITHOP IDENTIFIER
 %type<list>VARLIST
 %type<integer> TYPE
 %token BEG END
@@ -40,9 +41,8 @@ void yyerror(char* s);
 %token IF GOTO
 %left EQ NEQ
 %left GT GTE LT LTE
-%left PLUS MINUS
+%left ADD SUB
 %left MUL DIV
-
 
 
 %%
@@ -56,7 +56,6 @@ DECLARATIONS :
                 FILE* content = fopen("../file.txt","r");
                 int num = 0;
                 fscanf(content,"%d",&num);
-                printf("Number of temporaries : %d\n",num);
                 storeTempsInGSymbolTable(num);
 
                // print the global symbol table
@@ -114,20 +113,8 @@ SL :
    ;
 
 S :
-  ID EQUALS ID PLUS ID ';' {
-    arithmetic_TAC(xsm,lookUp($<string>1),lookUp($<string>3),"ADD",lookUp($<string>5));
-  }
-  |
-  ID EQUALS ID MINUS ID ';' {
-    arithmetic_TAC(xsm,lookUp($<string>1),lookUp($<string>3),"SUB",lookUp($<string>5));
-  }
-  |
-  ID EQUALS ID MUL ID ';' {
-    arithmetic_TAC(xsm,lookUp($<string>1),lookUp($<string>3),"MUL",lookUp($<string>5));
-  }
-  |
-  ID EQUALS ID DIV ID ';' {
-    arithmetic_TAC(xsm,lookUp($<string>1),lookUp($<string>3),"DIV",lookUp($<string>5));
+  ID EQUALS IDENTIFIER ARITHOP IDENTIFIER ';' {
+    arithmetic_TAC(xsm,lookUp($<string>1),$<string>3,$<string>4,$<string>5);
   }
   |  
   ID EQUALS NUM ';' { 
@@ -135,11 +122,12 @@ S :
   }
   |
   ID EQUALS ID ';' {
-    id_equals_id_TAC(xsm,lookUp($<string>1),lookUp($<string>3));
+  
+    id_equals_id_TAC(xsm,lookUp($<string>1),$<string>3);
   }
   |
   WRITE '(' ID ')' ';' {
-    write_id_TAC(xsm,lookUp($<string>3));
+   write_id_TAC(xsm,lookUp($<string>3));
   }
   |
   READ '(' ID ')' ';' {
@@ -185,12 +173,33 @@ RELOP :
         $$ = $<string>1;      
       }
       ;
-  
 
+ARITHOP : 
+        ADD {
+          $$ = $<string>1;
+        }
+        |
+        SUB {
+          $$ = $<string>1;
+        }
+        |
+        MUL {
+          $$ = $<string>1;
+        }
+        |
+        DIV {
+          $$ = $<string>1;
+        }
+        ;
 
-
-        
-
+IDENTIFIER : 
+          ID {
+          $$ = $<string>1;
+          }
+          |
+          NUM {
+          $$ = $<string>1;
+          }
 
 
 %%
@@ -198,17 +207,14 @@ RELOP :
 
 int main(int argc, char* argv[]){
 
-// -------------------------------- INITIAL ASSEMBLY CODE
+// -------------------------------- initial assembly code
   xsm = fopen(argv[2],"w");
   fprintf(xsm,"%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",0,2056,0,0,0,0,0,0);
   fprintf(xsm,"BRKP\n");
-
-// --------------------------------- PARSING INPUT FILE
+// --------------------------------- parsing input file
   f = fopen(argv[1],"r");
   yyin = f;
-
   yyparse();
-
   fprintf(xsm,"INT 10\n");
 
   return 0;
@@ -217,4 +223,6 @@ int main(int argc, char* argv[]){
 void yyerror(char* s){
   printf("ERROR:%s\n",s);
 }
+
+
 

@@ -4,7 +4,7 @@
 #include "../AST.h"
 #include "gentac.h"
 #include "../operators/optrans.h"
-#include "../map_implementation/map.h"
+#include "map_implementation/map.h"
 
 int blockLabel = 0;
 
@@ -38,8 +38,6 @@ void copyDeclarations(FILE* ip,FILE* op){
   }
 
   fputs("\nbegin\n",op);
-
-  fclose(ip);
 
 
 }
@@ -185,7 +183,4 @@ void while_print_tac(FILE* f,struct TreeNode* root){
 
   fprintf(f,"L%d:\n",nextB);
   
-
-  
-
 }

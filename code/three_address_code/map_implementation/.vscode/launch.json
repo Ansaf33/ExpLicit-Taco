@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/ansafhassan/Desktop/map_implementation",
+      "program": "/Users/ansafhassan/Desktop/map_implementation/build/Debug/outDebug"
+    }
+  ]
+}

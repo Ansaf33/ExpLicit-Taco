@@ -97,18 +97,26 @@
 }
 
 [+] {
-  return PLUS;
+  yylval.string = (char*)malloc(sizeof(char)*3);
+  strcpy(yylval.string,"ADD");
+  return ADD;
 }
 
 [-] {
+  yylval.string = (char*)malloc(sizeof(char)*3);
+  strcpy(yylval.string,"SUB"); 
   return MINUS;
 }
 
 [*] {
+  yylval.string = (char*)malloc(sizeof(char)*3);
+  strcpy(yylval.string,"MUL");
   return MUL;
 }
 
 [/] {
+  yylval.string = (char*)malloc(sizeof(char)*3);
+  strcpy(yylval.string,"DIV");
   return DIV;
 }
 

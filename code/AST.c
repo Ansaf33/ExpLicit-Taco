@@ -7,22 +7,14 @@
 #include "operators/optrans.h"
 #include "symbol_table/Gsymbol.h"
 #include "three_address_code/gentac.h"
-#include "map_implementation/map.h"
+
 
 
 int varId = 1;
-HashMap* hashmap = NULL;
 // ------------------------------------------------------------------------------------------------------------ GETTING VARIABLE IDENTIFIER
 
 int getVariableId(){
   return varId++;
-}
-
-// -------------------------------------------- INITIALIZE HASHMAP
-
-bool init_hashmap(){
-  hashmap = createHashMap();
-  return true;
 }
 
 
@@ -82,13 +74,6 @@ bool typeSatisfied(struct TreeNode* root){
 
 struct TreeNode* createNumNode(int val){
 
-  // ---------------------- CHECK HASHMAP
-  char con[20];
-  sprintf(con,"%d",val);
-  struct TreeNode* cached_val = get(hashmap,con);
-  if( cached_val ){
-    return cached_val;
-  }
 
   struct TreeNode* temp = (struct TreeNode*)malloc(sizeof(struct TreeNode));
   temp->val = val;
@@ -101,6 +86,7 @@ struct TreeNode* createNumNode(int val){
   temp->middle = NULL;
   temp->Gsymbol = NULL;
 
+/*
   // ------------------- THREE ADDRESS CODE
   char* varid = (char*)malloc(sizeof(char)*10);
   int id = getVariableId();
@@ -114,13 +100,7 @@ struct TreeNode* createNumNode(int val){
     getValue(temp),
     val 
   ); 
-
-  // --------------------- HASHMAP
-  temp->content = (char*)malloc(sizeof(char)*100);
-  strcpy(temp->content,con);
-  insert(hashmap,temp->content,temp);
-
-
+*/
 
   return temp;
 }
@@ -131,24 +111,6 @@ struct TreeNode* createNumNode(int val){
 struct TreeNode* createOpNode(int type,int op,struct TreeNode* left,struct TreeNode* right){
 
  
-  // --------------- HANDLES MAPPING
-  char* content = (char*)malloc(sizeof(char)*100);
-
-  if( op <= 10 && op != 4 ){
-
-    if( left && right ){
-      strcat(content,left->content);
-      strcat(content,map(op));
-      strcat(content,right->content);
-
-    }
-
-    struct TreeNode* cached_val = get(hashmap,content);
-    if( cached_val ){
-      return cached_val;
-    }
-
-  }
 
 
   // -------------- CREATES THE NODE
@@ -199,16 +161,6 @@ struct TreeNode* createOpNode(int type,int op,struct TreeNode* left,struct TreeN
       break;
       
   }
-
-  // -------------- INSERTS CONTENT IN HASHMAP
-
-  temp->content = (char*)malloc(sizeof(char)*100);
-  strcpy(temp->content,content);
-
-  if( op <= 10 && op != 4 ){
-    insert(hashmap,temp->content,temp);
-  }
-
   
   return temp;
 }
@@ -218,11 +170,6 @@ struct TreeNode* createOpNode(int type,int op,struct TreeNode* left,struct TreeN
 
 struct TreeNode* createStringNode(char* string){
 
-  // --------------- CHECKS HASHMAP
-  struct TreeNode* cached_val = get(hashmap,string);
-  if( cached_val ){
-    return cached_val;
-  }
 
   // ------------------ CREATES NODE
   struct TreeNode* temp = (struct TreeNode*)malloc(sizeof(struct TreeNode));
@@ -236,13 +183,6 @@ struct TreeNode* createStringNode(char* string){
   temp->right = NULL;
   temp->middle = NULL;
   temp->Gsymbol = NULL;
-
-  // -------------- PLACES STRING IN HASHMAP
-
-  temp->content = (char*)malloc(sizeof(char)*100);
-  strcpy(temp->content,string);
-  insert(hashmap,temp->content,temp);
-
   return temp;
 }
 
@@ -252,12 +192,6 @@ struct TreeNode* createStringNode(char* string){
 
 struct TreeNode* createIdNode(char* varname){
 
-
-  // --------------- CHECKS HASHMAP
-  struct TreeNode* cached_val = get(hashmap,varname);
-  if( cached_val ){
-    return cached_val;
-  }
 
 
   // ---------------- CREATES NODE
@@ -279,13 +213,6 @@ struct TreeNode* createIdNode(char* varname){
   temp->right = NULL;
   temp->middle = NULL;
 
-  // ---------------- PLACED INSIDE HASHMAP
-
-  temp->content = (char*)malloc(sizeof(char)*100);
-  strcpy(temp->content,varname);
-  insert(hashmap,temp->content,temp);
-
-
 
   return temp;
 
@@ -295,14 +222,6 @@ struct TreeNode* createIdNode(char* varname){
 
 struct TreeNode* createIfNode(struct TreeNode* middle,struct TreeNode* left,struct TreeNode* right){
 
-  // -------------------- CHECKS HASHMAP
-
-  char* content = (char*)malloc(sizeof(char)*100);
-  strcat(content,middle->left->content);
-  strcat(content,map(middle->op));
-  strcat(content,middle->right->content);
-
-  struct TreeNode* cached_val = get(hashmap,content);
 
   // ------------------- CREATES NODE
 
@@ -313,7 +232,7 @@ struct TreeNode* createIfNode(struct TreeNode* middle,struct TreeNode* left,stru
   temp->type = -1;
   temp->varname = NULL;
   temp->left = left;
-  temp->middle = (cached_val)?cached_val:middle;
+  temp->middle = middle;
   temp->right = right;
   temp->Gsymbol = NULL;
 
@@ -325,12 +244,6 @@ struct TreeNode* createIfNode(struct TreeNode* middle,struct TreeNode* left,stru
       exit(1);
     }
         
-  }
-
-  // ------------------------- INSERTS EXPRESSION INSIDE CACHE
-
-  if( !cached_val ){
-    insert(hashmap,temp->content,temp);
   }
 
 
@@ -347,14 +260,6 @@ struct TreeNode* createIfNode(struct TreeNode* middle,struct TreeNode* left,stru
 
 struct TreeNode* createWhileNode(int op,struct TreeNode* left,struct TreeNode* right){
 
-  // -------------------- CHECKS HASHMAP
-
-  char* content = (char*)malloc(sizeof(char)*100);
-  strcat(content,left->left->content);
-  strcat(content,map(left->op));
-  strcat(content,left->right->content);
-
-  struct TreeNode* cached_val = get(hashmap,content);
 
   // ------------------- CREATES NODE
 
@@ -365,7 +270,7 @@ struct TreeNode* createWhileNode(int op,struct TreeNode* left,struct TreeNode* r
   temp->op = op;
   temp->type = -1;
   temp->varname = NULL;
-  temp->left = cached_val?cached_val:left;
+  temp->left = left;
   temp->right = right;
   temp->middle = NULL;
   temp->Gsymbol = NULL;
@@ -377,10 +282,6 @@ struct TreeNode* createWhileNode(int op,struct TreeNode* left,struct TreeNode* r
       printf("While Condition : Type not matching.\n");
       exit(1);
     }
-  }
-
-  if( !cached_val ){
-    insert(hashmap,temp->content,temp);
   }
   
 

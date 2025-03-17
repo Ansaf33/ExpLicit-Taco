@@ -1,0 +1,12 @@
+decl
+int t,a,s,i;
+enddecl
+
+begin
+t1 = i * 4;
+a = t1;
+t2 = i + 1;
+i = t2;
+t3 = i * 4;
+s = t3;
+end;

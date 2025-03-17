@@ -1,29 +1,45 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "../symbol_table/Gsymbol.h"
 #include "../reghandling.h"
+#include "instruction_set.h"
 
 // ------------------------------------------------------------------------------------------------------- ARITHMETIC EXPRESSIONS
 
-void arithmetic_TAC(FILE* f,struct Gsymbol* dest,struct Gsymbol* src1,char* op,struct Gsymbol* src2){
+void arithmetic_TAC(FILE* f,struct Gsymbol* dest,char* src1,char* op,char* src2){
+  struct Gsymbol* g1 = lookUp(src1);
+  struct Gsymbol* g2 = lookUp(src2);
   if( dest == NULL ){
     printf("Destination entry not found.\n");
     exit(1);
   }
-  if( src1 == NULL ){
+  if( g1 == NULL && !isnum(src1) ){
     printf("Source entry 1 not found\n");
     exit(1);
   }
-  if( src2 == NULL ){
+  if( g2 == NULL && !isnum(src2) ){
     printf("Source entry 2 not found\n");
     exit(1);
   }
 
+
   int lreg = getReg();
   int rreg = getReg();
-  fprintf(f,"MOV R%d, [%d]\n",lreg,src1->address);
-  fprintf(f,"MOV R%d, [%d]\n",rreg,src2->address);
+  if( g1 ){
+    fprintf(f,"MOV R%d, [%d]\n",lreg,g1->address);
+  }
+  else{
+    fprintf(f,"MOV R%d, %d\n",lreg,atoi(src1));
+  }
+  if( g2 ){
+    fprintf(f,"MOV R%d, [%d]\n",rreg,g2->address);
+  }
+  else{
+    fprintf(f,"MOV R%d, %d\n",rreg,atoi(src2));
+  }
+
   fprintf(f,"%s R%d, R%d\n",op,lreg,rreg);
 
   int adReg = getReg();
@@ -52,18 +68,25 @@ void id_equals_num_TAC(FILE* f,struct Gsymbol* dest,int num){
 // ------------------------------------------------------------------------------------------------------- ID = ID STATEMENT
 
 
-void id_equals_id_TAC(FILE* f,struct Gsymbol* dest,struct Gsymbol* src){
+void id_equals_id_TAC(FILE* f,struct Gsymbol* dest,char* src){
+  struct Gsymbol* g = lookUp(src);
+
   if( dest == NULL ){
     printf("Destination entry not found\n");
     exit(1);
   }
-  if( src == NULL ){
+  if( src == NULL && !isnum(src) ){
     printf("Source entry not found\n");
     exit(1);
   }
 
   int a = getReg();
-  fprintf(f,"MOV R%d, [%d]\n",a,src->address);
+  if(g){
+  fprintf(f,"MOV R%d, [%d]\n",a,g->address);
+  }
+  else{
+  fprintf(f,"MOV R%d, %d\n",a,atoi(src));
+  }
   fprintf(f,"MOV [%d], R%d\n",dest->address,a);
   
   freeReg();
@@ -208,4 +231,6 @@ void if_TAC(FILE* f,struct Gsymbol* id1,char* relop,struct Gsymbol* id2,char* th
 
 
 
-
+bool isnum(char* str){
+  return str[0] >= 48 && str[0] <= 57;
+}

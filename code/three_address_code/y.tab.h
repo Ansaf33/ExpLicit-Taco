@@ -76,7 +76,9 @@ extern int yydebug;
     GT = 277,                      /* GT  */
     GTE = 278,                     /* GTE  */
     LT = 279,                      /* LT  */
-    LTE = 280                      /* LTE  */
+    LTE = 280,                     /* LTE  */
+    ADD = 281,                     /* ADD  */
+    SUB = 282                      /* SUB  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -108,19 +110,21 @@ extern int yydebug;
 #define GTE 278
 #define LT 279
 #define LTE 280
+#define ADD 281
+#define SUB 282
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 26 "parsetac.y"
+#line 27 "parsetac.y"
 
   struct TreeNode* node;
   char* string;
   int integer;
   struct list* list;
 
-#line 124 "y.tab.h"
+#line 128 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -79,7 +79,7 @@
 #include "symbol_table/Gsymbol.h"
 #include "symbol_table/varList.h"
 #include "three_address_code/gentac.h"
-#include "map_implementation/map.h"
+
 
 
 struct TreeNode* root;
@@ -1857,11 +1857,10 @@ int main(int argc, char* argv[]){
   FILE* f = fopen(argv[1],"r");
   yyin = f;
 
-  tacFile = fopen("three_address_code/tac.txt","w"); // three address code file
+  tacFile = fopen(argv[3],"w"); // three address code file
   FILE* inputFile = fopen("input.txt","r");
   copyDeclarations(inputFile,tacFile); // copy everything from decl to enddecl to the tacFile
-
-bool initialized = init_hashmap();
+  fclose(inputFile);
 
   yyparse();
 
@@ -1870,8 +1869,6 @@ bool initialized = init_hashmap();
 
 
 // --------------------------------- ASSEMBLY CODE
-
-
 
   FILE* xsm = fopen(argv[2],"w");
   fprintf(xsm,"%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",0,2056,0,0,0,0,0,0);
