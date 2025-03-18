@@ -96,10 +96,13 @@ char* combine_three(char* a,char* b,char* c);
 bool isId(char* str);
 void remove_lhs_id(char* str);
 void add_rhs_id(char* str);
+void copy_ids_from_gst(void);
+void repopulate_set(void);
+void delete_hashmap(void);
 
 
 
-#line 103 "y.tab.c"
+#line 106 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -206,14 +209,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 33 "parseopt.y"
+#line 36 "parseopt.y"
 
   struct TreeNode* node;
   char* string;
   int integer;
   struct list* list;
 
-#line 217 "y.tab.c"
+#line 220 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -665,12 +668,12 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,    57,    57,    60,    71,    75,    77,    81,    87,    91,
-      97,   101,   107,   110,   116,   118,   122,   156,   165,   174,
-     179,   184,   189,   194,   202,   206,   210,   214,   218,   222,
-     228,   232,   236,   240,   246,   250
+       0,    60,    60,    63,    76,    80,    82,    86,    92,    96,
+     102,   106,   112,   115,   121,   123,   127,   161,   170,   179,
+     184,   189,   198,   208,   219,   223,   227,   231,   235,   239,
+     245,   249,   253,   257,   263,   267
 };
 #endif
 
@@ -701,7 +704,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-14)
+#define YYPACT_NINF (-33)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -715,13 +718,13 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -5,   -12,    14,    15,   -14,   -14,   -14,    19,   -14,    16,
-     -14,     2,   -14,   -14,   -14,   -14,    -6,    -1,    11,    12,
-     -13,    13,    36,     7,   -14,   -14,    37,   -14,    38,    39,
-      30,   -14,    40,   -14,    21,   -14,   -14,    20,    22,    24,
-      26,   -10,     8,   -14,    27,    28,   -14,   -14,   -14,   -14,
-     -14,   -14,    32,   -14,   -14,   -14,   -14,   -14,   -14,    42,
-     -14,   -14,   -14,   -14,    29,    31,   -14,    41,    50,   -14
+      -2,   -11,    19,    18,   -33,   -33,   -33,    -1,   -33,    17,
+     -33,     5,   -33,   -33,   -33,   -33,   -21,    16,     9,    15,
+     -12,    20,    38,    22,   -33,   -33,    39,   -33,    40,    41,
+      30,   -33,    35,   -33,    23,   -33,   -33,    21,    24,    25,
+      26,    -9,   -33,   -33,    11,   -33,    28,    29,   -33,   -33,
+     -33,   -33,   -33,   -33,    35,   -33,   -33,   -33,   -33,   -33,
+     -33,    35,   -33,   -33,    31,    27,   -33,    42,    52,   -33
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -733,23 +736,23 @@ static const yytype_int8 yydefact[] =
        1,     0,     2,     3,     5,    11,     0,     0,     0,     0,
        0,     0,     0,     0,    15,     7,     0,    13,     0,     0,
        0,    23,     0,    22,     0,    14,    10,     0,     0,    35,
-      34,     0,     0,    12,     0,     0,    17,    18,    32,    33,
-      30,    31,     0,    29,    28,    26,    27,    24,    25,     0,
-      20,    19,    35,    34,     0,     0,    16,     0,     0,    21
+      34,     0,    35,    34,     0,    12,     0,     0,    17,    18,
+      32,    33,    30,    31,     0,    29,    28,    26,    27,    24,
+      25,     0,    20,    19,     0,     0,    16,     0,     0,    21
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -14,   -14,   -14,   -14,    52,   -14,   -14,   -14,   -14,    43,
-     -14,   -14,     9
+     -33,   -33,   -33,   -33,    55,   -33,   -33,   -33,   -33,    43,
+     -33,   -33,   -32
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
        0,     2,     3,     7,     8,     9,    16,    12,    23,    24,
-      59,    52,    41
+      61,    54,    41
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -757,24 +760,24 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      30,    48,    49,     4,     5,     6,    17,    18,    19,     1,
-      20,    34,    18,    19,    10,    20,    50,    51,    11,    31,
-      21,    22,    25,    26,    15,    21,    22,    27,    53,    54,
-      55,    56,    57,    58,    13,     5,     6,    39,    40,    62,
-      63,    28,    29,    32,    33,    36,    37,    38,    42,    43,
-      65,    44,    46,    45,    47,    60,    61,    66,    69,    14,
-      68,    64,    67,     0,     0,     0,    35
+      44,    30,    50,    51,     4,     5,     6,    25,    26,    17,
+      18,    19,     1,    20,    13,     5,     6,    52,    53,    10,
+      31,    11,    64,    21,    22,    15,    34,    18,    19,    65,
+      20,    55,    56,    57,    58,    59,    60,    39,    40,    28,
+      21,    22,    42,    43,    27,    29,    33,    36,    37,    38,
+      32,    45,    46,    48,    49,    47,    62,    63,    67,    66,
+      69,    68,    14,     0,     0,     0,    35
 };
 
 static const yytype_int8 yycheck[] =
 {
-      13,    11,    12,    15,    16,    17,     4,     5,     6,    14,
-       8,     4,     5,     6,     0,     8,    26,    27,     3,    32,
-      18,    19,    28,    29,     8,    18,    19,    28,    20,    21,
-      22,    23,    24,    25,    15,    16,    17,     7,     8,     7,
-       8,    30,    30,    30,     8,     8,     8,     8,     8,    28,
-       8,    31,    28,    31,    28,    28,    28,    28,     8,     7,
-      19,    52,    31,    -1,    -1,    -1,    23
+      32,    13,    11,    12,    15,    16,    17,    28,    29,     4,
+       5,     6,    14,     8,    15,    16,    17,    26,    27,     0,
+      32,     3,    54,    18,    19,     8,     4,     5,     6,    61,
+       8,    20,    21,    22,    23,    24,    25,     7,     8,    30,
+      18,    19,     7,     8,    28,    30,     8,     8,     8,     8,
+      30,    28,    31,    28,    28,    31,    28,    28,    31,    28,
+       8,    19,     7,    -1,    -1,    -1,    23
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -785,9 +788,9 @@ static const yytype_int8 yystos[] =
        0,     3,    40,    15,    37,     8,    39,     4,     5,     6,
        8,    18,    19,    41,    42,    28,    29,    28,    30,    30,
       13,    32,    30,     8,     4,    42,     8,     8,     8,     7,
-       8,    45,     8,    28,    31,    31,    28,    28,    11,    12,
-      26,    27,    44,    20,    21,    22,    23,    24,    25,    43,
-      28,    28,     7,     8,    45,     8,    28,    31,    19,     8
+       8,    45,     7,     8,    45,    28,    31,    31,    28,    28,
+      11,    12,    26,    27,    44,    20,    21,    22,    23,    24,
+      25,    43,    28,    28,    45,    45,    28,    31,    19,     8
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
@@ -1269,77 +1272,79 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* DECLARATIONS: DECL DL ENDDECL  */
-#line 60 "parseopt.y"
+#line 63 "parseopt.y"
                             {
-                // get the integer from the file and add those temps
+             
                 FILE* content = fopen("../../file.txt","r");
                 int num = 0;
-                fscanf(content,"%d",&num);
-                storeTempsInGSymbolTable(num);
+                fscanf(content,"%d",&num); // get the number of temporaries
 
-               // print the global symbol table
-                getAll();
+                storeTempsInGSymbolTable(num); // store temporary variables in GST
+
+                copy_ids_from_gst(); // copy declarations that are identifiers into GST
+
+                getAll(); // print gst
               }
-#line 1284 "y.tab.c"
+#line 1289 "y.tab.c"
     break;
 
   case 7: /* D: TYPE VARLIST ';'  */
-#line 81 "parseopt.y"
+#line 86 "parseopt.y"
                       {
       addAllSymbols((yyvsp[-1].list),(yyvsp[-2].integer),1);
      }
-#line 1292 "y.tab.c"
+#line 1297 "y.tab.c"
     break;
 
   case 8: /* TYPE: INT  */
-#line 87 "parseopt.y"
+#line 92 "parseopt.y"
          {
      (yyval.integer) = (yyvsp[0].integer);
      }
-#line 1300 "y.tab.c"
+#line 1305 "y.tab.c"
     break;
 
   case 9: /* TYPE: STR  */
-#line 91 "parseopt.y"
+#line 96 "parseopt.y"
          {
      (yyval.integer) = (yyvsp[0].integer);
      }
-#line 1308 "y.tab.c"
+#line 1313 "y.tab.c"
     break;
 
   case 10: /* VARLIST: VARLIST ',' ID  */
-#line 97 "parseopt.y"
+#line 102 "parseopt.y"
                        {
           (yyval.list) = addVariable((yyvsp[-2].list),(yyvsp[0].string));
         }
-#line 1316 "y.tab.c"
+#line 1321 "y.tab.c"
     break;
 
   case 11: /* VARLIST: ID  */
-#line 101 "parseopt.y"
+#line 106 "parseopt.y"
            {
           (yyval.list) = addVariable(NULL,(yyvsp[0].string));
         }
-#line 1324 "y.tab.c"
+#line 1329 "y.tab.c"
     break;
 
   case 12: /* P: BEG SL END ';'  */
-#line 107 "parseopt.y"
+#line 112 "parseopt.y"
                  {
   }
-#line 1331 "y.tab.c"
+#line 1336 "y.tab.c"
     break;
 
   case 13: /* P: BEG END ';'  */
-#line 110 "parseopt.y"
+#line 115 "parseopt.y"
               {
   printf("Valid program.\n");
   }
-#line 1339 "y.tab.c"
+#line 1344 "y.tab.c"
     break;
 
   case 16: /* S: ID EQUALS IDENTIFIER ARITHOP IDENTIFIER ';'  */
-#line 122 "parseopt.y"
+#line 127 "parseopt.y"
                                               {
     printf("Here\n");
     // combine the rhs expression and get the value
@@ -1373,11 +1378,11 @@ yyreduce:
 
 
   }
-#line 1377 "y.tab.c"
+#line 1382 "y.tab.c"
     break;
 
   case 17: /* S: ID EQUALS NUM ';'  */
-#line 156 "parseopt.y"
+#line 161 "parseopt.y"
                     { 
     fprintf(o,"%s = %s;\n",(yyvsp[-3].string),(yyvsp[-1].string));
 
@@ -1386,11 +1391,11 @@ yyreduce:
 
 
   }
-#line 1390 "y.tab.c"
+#line 1395 "y.tab.c"
     break;
 
   case 18: /* S: ID EQUALS ID ';'  */
-#line 165 "parseopt.y"
+#line 170 "parseopt.y"
                    {
     fprintf(o,"%s = %s;\n",(yyvsp[-3].string),(yyvsp[-1].string));
 
@@ -1399,152 +1404,164 @@ yyreduce:
   
 
   }
-#line 1403 "y.tab.c"
+#line 1408 "y.tab.c"
     break;
 
   case 19: /* S: WRITE '(' ID ')' ';'  */
-#line 174 "parseopt.y"
+#line 179 "parseopt.y"
                        {
     fprintf(o,"write(%s);\n",(yyvsp[-2].string));
 
   }
-#line 1412 "y.tab.c"
+#line 1417 "y.tab.c"
     break;
 
   case 20: /* S: READ '(' ID ')' ';'  */
-#line 179 "parseopt.y"
+#line 184 "parseopt.y"
                       {
     fprintf(o,"read(%s);\n",(yyvsp[-2].string));
 
   }
-#line 1421 "y.tab.c"
+#line 1426 "y.tab.c"
     break;
 
-  case 21: /* S: IF '(' ID RELOP ID ')' GOTO ID  */
-#line 184 "parseopt.y"
-                                 {
+  case 21: /* S: IF '(' IDENTIFIER RELOP IDENTIFIER ')' GOTO ID  */
+#line 189 "parseopt.y"
+                                                 {
     fprintf(o,"if ( %s %s %s ) goto %s\n",(yyvsp[-5].string),(yyvsp[-4].string),(yyvsp[-3].string),(yyvsp[0].string));
 
-  }
-#line 1430 "y.tab.c"
-    break;
-
-  case 22: /* S: GOTO ID  */
-#line 189 "parseopt.y"
-          {
-    fprintf(o,"goto %s\n",(yyvsp[0].string));
+    // repopulate set and delete hashmap
+    repopulate_set();
+    delete_hashmap();
 
   }
 #line 1439 "y.tab.c"
     break;
 
+  case 22: /* S: GOTO ID  */
+#line 198 "parseopt.y"
+          {
+    fprintf(o,"goto %s\n",(yyvsp[0].string));
+
+    // repopulate set and delete hashmap
+    repopulate_set();
+    delete_hashmap();
+
+
+  }
+#line 1453 "y.tab.c"
+    break;
+
   case 23: /* S: ID ':'  */
-#line 194 "parseopt.y"
+#line 208 "parseopt.y"
          {
     fprintf(o,"%s:\n",(yyvsp[-1].string));
 
+    // repopulate set and delete hashmap
+    repopulate_set();
+    delete_hashmap();
   }
-#line 1448 "y.tab.c"
+#line 1465 "y.tab.c"
     break;
 
   case 24: /* RELOP: LT  */
-#line 202 "parseopt.y"
+#line 219 "parseopt.y"
           {
         (yyval.string) = (yyvsp[0].string);
       }
-#line 1456 "y.tab.c"
+#line 1473 "y.tab.c"
     break;
 
   case 25: /* RELOP: LTE  */
-#line 206 "parseopt.y"
+#line 223 "parseopt.y"
           {
         (yyval.string) = (yyvsp[0].string);
       }
-#line 1464 "y.tab.c"
+#line 1481 "y.tab.c"
     break;
 
   case 26: /* RELOP: GT  */
-#line 210 "parseopt.y"
+#line 227 "parseopt.y"
          {
         (yyval.string) = (yyvsp[0].string);  
       }
-#line 1472 "y.tab.c"
+#line 1489 "y.tab.c"
     break;
 
   case 27: /* RELOP: GTE  */
-#line 214 "parseopt.y"
+#line 231 "parseopt.y"
           {
         (yyval.string) = (yyvsp[0].string);  
       }
-#line 1480 "y.tab.c"
+#line 1497 "y.tab.c"
     break;
 
   case 28: /* RELOP: NEQ  */
-#line 218 "parseopt.y"
+#line 235 "parseopt.y"
           {
         (yyval.string) = (yyvsp[0].string);
       }
-#line 1488 "y.tab.c"
+#line 1505 "y.tab.c"
     break;
 
   case 29: /* RELOP: EQ  */
-#line 222 "parseopt.y"
+#line 239 "parseopt.y"
           {
         (yyval.string) = (yyvsp[0].string);      
       }
-#line 1496 "y.tab.c"
+#line 1513 "y.tab.c"
     break;
 
   case 30: /* ARITHOP: ADD  */
-#line 228 "parseopt.y"
+#line 245 "parseopt.y"
             {
           (yyval.string) = (yyvsp[0].string);
         }
-#line 1504 "y.tab.c"
+#line 1521 "y.tab.c"
     break;
 
   case 31: /* ARITHOP: SUB  */
-#line 232 "parseopt.y"
+#line 249 "parseopt.y"
             {
           (yyval.string) = (yyvsp[0].string);
         }
-#line 1512 "y.tab.c"
+#line 1529 "y.tab.c"
     break;
 
   case 32: /* ARITHOP: MUL  */
-#line 236 "parseopt.y"
+#line 253 "parseopt.y"
             {
           (yyval.string) = (yyvsp[0].string);
         }
-#line 1520 "y.tab.c"
+#line 1537 "y.tab.c"
     break;
 
   case 33: /* ARITHOP: DIV  */
-#line 240 "parseopt.y"
+#line 257 "parseopt.y"
             {
           (yyval.string) = (yyvsp[0].string);
         }
-#line 1528 "y.tab.c"
+#line 1545 "y.tab.c"
     break;
 
   case 34: /* IDENTIFIER: ID  */
-#line 246 "parseopt.y"
+#line 263 "parseopt.y"
              {
           (yyval.string) = (yyvsp[0].string);
           }
-#line 1536 "y.tab.c"
+#line 1553 "y.tab.c"
     break;
 
   case 35: /* IDENTIFIER: NUM  */
-#line 250 "parseopt.y"
+#line 267 "parseopt.y"
               {
           (yyval.string) = (yyvsp[0].string);
           }
-#line 1544 "y.tab.c"
+#line 1561 "y.tab.c"
     break;
 
 
-#line 1548 "y.tab.c"
+#line 1565 "y.tab.c"
 
       default: break;
     }
@@ -1737,7 +1754,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 255 "parseopt.y"
+#line 272 "parseopt.y"
 
 
 
@@ -1748,10 +1765,8 @@ int main(int argc, char* argv[]){
 
   // -------------------------------- optimized code
   o = fopen(argv[2],"w"); 
-  printf("Opened optimized\n");
 // --------------------------------- parsing input file
   f = fopen(argv[1],"r");
-  printf("Opened input tac file\n");
   yyin = f;
   // ------------------------------- copy declarations
   copyDeclarations(f,o);
@@ -1811,12 +1826,34 @@ void remove_lhs_id(char* str){
     }
 }
 
-
 // add right hand side id to set
 
 void add_rhs_id(char* str){
     if( isId(str) ) {
     set_add(&set,str);
     }
-  
+}
+
+
+// copy identifiers to set
+
+void copy_ids_from_gst(){
+  struct Gsymbol* cur = getHead();
+  while(cur!=NULL){
+    if( isId(cur->name) ) set_add(&set,cur->name);
+    cur = cur->next;
+  }
+}
+
+// repopulate set
+
+void repopulate_set(){
+  copy_ids_from_gst();
+}
+
+// empty hashmap
+
+void delete_hashmap(){
+  freeHashMap(hashmap); 
+  init_hashmap();
 }

@@ -59,7 +59,7 @@ DECLARATIONS :
                 storeTempsInGSymbolTable(num);
 
                // print the global symbol table
-                getAll();
+               //getAll();
               }
              |
              DECL ENDDECL
@@ -134,8 +134,8 @@ S :
     read_id_TAC(xsm,lookUp($<string>3));
   }
   |
-  IF '(' ID RELOP ID ')' GOTO ID {
-    if_TAC(xsm,lookUp($<string>3),$<string>4,lookUp($<string>5),$<string>8); 
+  IF '(' IDENTIFIER RELOP IDENTIFIER ')' GOTO ID {
+    if_TAC(xsm,$<string>3,$<string>4,$<string>5,$<string>8); 
   }
   |
   GOTO ID {

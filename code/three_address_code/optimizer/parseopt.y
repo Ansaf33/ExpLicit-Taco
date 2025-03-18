@@ -26,6 +26,9 @@ char* combine_three(char* a,char* b,char* c);
 bool isId(char* str);
 void remove_lhs_id(char* str);
 void add_rhs_id(char* str);
+void copy_ids_from_gst(void);
+void repopulate_set(void);
+void delete_hashmap(void);
 
 
 %}
@@ -58,14 +61,16 @@ PROGRAM :
 
 DECLARATIONS :
              DECL DL ENDDECL{
-                // get the integer from the file and add those temps
+             
                 FILE* content = fopen("../../file.txt","r");
                 int num = 0;
-                fscanf(content,"%d",&num);
-                storeTempsInGSymbolTable(num);
+                fscanf(content,"%d",&num); // get the number of temporaries
 
-               // print the global symbol table
-                getAll();
+                storeTempsInGSymbolTable(num); // store temporary variables in GST
+
+                copy_ids_from_gst(); // copy declarations that are identifiers into GST
+
+                getAll(); // print gst
               }
              |
              DECL ENDDECL
@@ -181,19 +186,31 @@ S :
 
   }
   |
-  IF '(' ID RELOP ID ')' GOTO ID {
+  IF '(' IDENTIFIER RELOP IDENTIFIER ')' GOTO ID {
     fprintf(o,"if ( %s %s %s ) goto %s\n",$<string>3,$<string>4,$<string>5,$<string>8);
+
+    // repopulate set and delete hashmap
+    repopulate_set();
+    delete_hashmap();
 
   }
   |
   GOTO ID {
     fprintf(o,"goto %s\n",$<string>2);
 
+    // repopulate set and delete hashmap
+    repopulate_set();
+    delete_hashmap();
+
+
   }
   |
   ID ':' {
     fprintf(o,"%s:\n",$<string>1);
 
+    // repopulate set and delete hashmap
+    repopulate_set();
+    delete_hashmap();
   }
 
   ;
@@ -262,10 +279,8 @@ int main(int argc, char* argv[]){
 
   // -------------------------------- optimized code
   o = fopen(argv[2],"w"); 
-  printf("Opened optimized\n");
 // --------------------------------- parsing input file
   f = fopen(argv[1],"r");
-  printf("Opened input tac file\n");
   yyin = f;
   // ------------------------------- copy declarations
   copyDeclarations(f,o);
@@ -325,12 +340,34 @@ void remove_lhs_id(char* str){
     }
 }
 
-
 // add right hand side id to set
 
 void add_rhs_id(char* str){
     if( isId(str) ) {
     set_add(&set,str);
     }
-  
+}
+
+
+// copy identifiers to set
+
+void copy_ids_from_gst(){
+  struct Gsymbol* cur = getHead();
+  while(cur!=NULL){
+    if( isId(cur->name) ) set_add(&set,cur->name);
+    cur = cur->next;
+  }
+}
+
+// repopulate set
+
+void repopulate_set(){
+  copy_ids_from_gst();
+}
+
+// empty hashmap
+
+void delete_hashmap(){
+  freeHashMap(hashmap); 
+  init_hashmap();
 }

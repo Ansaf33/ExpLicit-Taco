@@ -215,12 +215,38 @@ void label_TAC(FILE* f,char* label){
 
 // ------------------------------------------------------------------------------------------------ IF STATEMENT
 
-void if_TAC(FILE* f,struct Gsymbol* id1,char* relop,struct Gsymbol* id2,char* thenLabel){
+void if_TAC(FILE* f,char* id1,char* relop,char* id2,char* thenLabel){
+
+  struct Gsymbol* g1 = lookUp(id1);
+  struct Gsymbol* g2 = lookUp(id2);
+
+  if( !g1 && !isnum(id1) ){
+    printf("LHS of boolean expression invalid.\n");
+    exit(1);
+  }
+  if( !g2 && !isnum(id2) ){
+    printf("RHS of boolean expression invalid.\n");
+    exit(1);
+  }
   // evaluate boolean expression
   int u = getReg();
   int v = getReg();
-  fprintf(f,"MOV R%d, [%d]\n",u,id1->address);
-  fprintf(f,"MOV R%d, [%d]\n",v,id2->address);
+
+  // first entry
+  if( g1 ){
+    fprintf(f,"MOV R%d, [%d]\n",u,g1->address);
+  }
+  else{
+    fprintf(f,"MOV R%d, %d\n",u,atoi(id1));
+  }
+
+  // second entry
+  if( g2 ){
+    fprintf(f,"MOV R%d, [%d]\n",v,g2->address);
+  }
+  else{
+    fprintf(f,"MOV R%d, %d\n",v,atoi(id2));
+  }
 
   // result stored in u
   fprintf(f,"%s R%d, R%d\n",relop,u,v);

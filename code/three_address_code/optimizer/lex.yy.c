@@ -849,7 +849,7 @@ YY_RULE_SETUP
 #line 63 "lexopt.l"
 {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"LT");
+  strcpy(yylval.string,"<");
   return LT;
 }
 	YY_BREAK
@@ -858,7 +858,7 @@ YY_RULE_SETUP
 #line 69 "lexopt.l"
 {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"GT");
+  strcpy(yylval.string,">");
   return GT;
 }
 	YY_BREAK
@@ -867,7 +867,7 @@ YY_RULE_SETUP
 #line 75 "lexopt.l"
 {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"LE");
+  strcpy(yylval.string,"<=");
   return LTE;
 }
 	YY_BREAK
@@ -876,7 +876,7 @@ YY_RULE_SETUP
 #line 81 "lexopt.l"
 {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"GE"); 
+  strcpy(yylval.string,">="); 
   return GTE;
 }
 	YY_BREAK
@@ -885,7 +885,7 @@ YY_RULE_SETUP
 #line 87 "lexopt.l"
 {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"EQ");
+  strcpy(yylval.string,"==");
   return EQ;
 }
 	YY_BREAK
@@ -894,7 +894,7 @@ YY_RULE_SETUP
 #line 93 "lexopt.l"
 {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"NE");
+  strcpy(yylval.string,"!=");
   return NEQ;
 }
 	YY_BREAK

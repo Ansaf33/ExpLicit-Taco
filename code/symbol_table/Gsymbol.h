@@ -44,4 +44,6 @@ void deleteGSymbolTable(void);
 
 void storeTempsInGSymbolTable(int id);
 
+struct Gsymbol* getHead(void);
+
 #endif

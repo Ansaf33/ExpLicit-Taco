@@ -112,5 +112,8 @@ void storeTempsInGSymbolTable(int id){
   free(v);
 }
 
+struct Gsymbol* getHead(){
+  return head;
+}
 
 

@@ -22,7 +22,7 @@ void id_equals_num_TAC(FILE* f,struct Gsymbol* dest,int num);
 
 void id_equals_id_TAC(FILE* f,struct Gsymbol* dest,char* src);
 
-void if_TAC(FILE* f,struct Gsymbol* id1,char* relop,struct Gsymbol* id2,char* thenLabel);
+void if_TAC(FILE* f,char* id1,char* relop,char* id2,char* thenLabel);
 
 void jump_TAC(FILE* f,char* label);
 

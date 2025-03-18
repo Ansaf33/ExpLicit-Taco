@@ -62,37 +62,37 @@
 
 [<] {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"LT");
+  strcpy(yylval.string,"<");
   return LT;
 }
 
 [>] {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"GT");
+  strcpy(yylval.string,">");
   return GT;
 }
 
 "<=" {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"LE");
+  strcpy(yylval.string,"<=");
   return LTE;
 }
 
 ">=" {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"GE"); 
+  strcpy(yylval.string,">="); 
   return GTE;
 }
 
 "==" {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"EQ");
+  strcpy(yylval.string,"==");
   return EQ;
 }
 
 "!=" {
   yylval.string = (char*)malloc(sizeof(char)*3);
-  strcpy(yylval.string,"NE");
+  strcpy(yylval.string,"!=");
   return NEQ;
 }
 

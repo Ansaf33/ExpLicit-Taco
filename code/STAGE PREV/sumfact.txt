@@ -1,0 +1,41 @@
+decl
+int i,n,s,fact[10];
+enddecl
+
+
+int main(){
+
+  decl
+  enddecl
+
+
+begin
+
+read(n);
+
+fact[1] = 1;
+write(fact[1]);
+s = 1;
+i = 2;
+
+while ( i <= n ) do 
+
+  fact[i] = fact[i-1] * i;
+  write(fact[i]);
+  s = s + fact[i];
+
+  i = i + 1;
+
+endwhile;
+
+write("sum is");
+write(s);
+
+
+
+
+end;
+
+}
+
+

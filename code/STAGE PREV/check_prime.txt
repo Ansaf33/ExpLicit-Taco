@@ -1,0 +1,39 @@
+decl
+int i,n;
+enddecl
+
+
+int main(){
+
+  decl
+  enddecl
+
+begin
+
+read(n);
+
+i = 2;
+
+while ( i < n ) do 
+
+  if ( n-i*(n/i) == 0 ) then
+    write("not prime");
+    write(i);
+    break;
+  else
+    write("not by");
+    write(i);
+    i = i + 1;
+    continue;
+  endif;
+
+
+endwhile;
+
+
+
+end;
+
+}
+
+

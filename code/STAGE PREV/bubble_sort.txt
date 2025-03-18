@@ -1,0 +1,52 @@
+decl
+int n,i,j,ar[10],temp;
+enddecl
+
+int main(){
+decl
+enddecl
+begin
+
+write("Enter N");
+read(n);
+
+
+i = 0;
+while( i < n ) do
+  write("element  ");
+  read(ar[i]);
+  i = i + 1;
+endwhile;
+
+i = 0;
+while( i < n ) do
+
+  j = 0;
+
+  while ( j < n-1-i ) do
+    if ( ar[j] > ar[j+1] ) then
+      temp = ar[j];
+      ar[j] = ar[j+1];
+      ar[j+1] = temp;
+    endif;
+  j = j + 1;
+  endwhile;
+
+
+  i = i + 1;
+
+
+
+endwhile;
+
+i = 0;
+write("sorted");
+while ( i < n ) do
+  write(ar[i]);
+  i = i + 1;
+endwhile;
+
+
+end;
+
+}
